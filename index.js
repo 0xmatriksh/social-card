@@ -65,18 +65,56 @@ function createImage(title, description) {
         context.fillText(descriptionText, descriptionTextX, descriptionTextY + j * lineHeight); // Render the description text
     }
 
-    // Convert the canvas to a data URL
+    // Add a circle in the green background part
+    var circleRadius = 70; // Adjust the circle radius as desired
+    var circleX = circleRadius + 5; // X coordinate of the circle's center
+    var circleY = canvas.height / 2; // Y coordinate of the circle's center
+
+    context.fillStyle = "#34eb55"; // Set the circle fill color to #34eb55
+    context.beginPath();
+    context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI);
+    context.fill();
+
+    // Load a random image and draw it inside the circle
+    var image = new Image();
+    image.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9XVwgTDJCrNKfN1A4ZIhNs0Slk8MBkf48fA"; // Replace with the source of your random image
+
+    image.onload = function () {
+        // Clip the rendering to the circle
+        context.save();
+        context.beginPath();
+        context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI);
+        context.clip();
+
+        // Calculate the size and position of the image to fit inside the circle
+        var imageWidth = circleRadius * 2;
+        var imageHeight = circleRadius * 2;
+        var imageX = circleX - circleRadius;
+        var imageY = circleY - circleRadius;
+
+        // Draw the image inside the circle
+        context.drawImage(image, imageX, imageY, imageWidth, imageHeight);
+
+        context.restore(); // Restore the context to remove the clipping path
+
+        // Convert the canvas to a data URL
+
+    };
+
     var dataURL = canvas.toDataURL("image/jpeg");
+    console.log(dataURL)
 
     // Update the meta tag with the custom image
     var metaTag = document.querySelector('meta[property="twitter:image"]');
     metaTag.setAttribute("content", dataURL);
+    // // Convert the canvas to a data URL
+    // var dataURL = canvas.toDataURL("image/jpeg");
+
+    // // Update the meta tag with the custom image
+    // var metaTag = document.querySelector('meta[property="twitter:image"]');
+    // metaTag.setAttribute("content", dataURL);
 
 }
-
-
-
-
 
 createImage("Investor from Nepal", "Dividend growth investing and how I grow dividend")
 
